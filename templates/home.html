@@ -4,42 +4,71 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    
 </head>
 <body>
-    <div class="playlist-container">
+    <div class="columns mt-4 is-flex flex-grow-1 is-clearfix" style="height: 100vh ;">
     {% for playlist in playlistViewModelArray %}
-        <div class="playlist">
-            <button style="max-height: 2rem;  margin-left: auto; background-color:rgb(14, 235, 36)">+ Song</button>
-            <h2 class="playlist-title">{{playlist['playlist'].title}}</h2>
+        <div class="column mx-2 p-2 has-background-warning">
+            <button onclick="addSong({{playlist['playlist'].id}})" class="button is-large is-warning is-pulled-right is-ghost py-0 px-1 mt-0" style="height: 2rem ;">+</button>
+
+            <h2 class="title has-text-centered is-4 mt-6">{{playlist['playlist'].title}}</h2>
             
             {% for track in playlist['tracks'] %}
-                <div class="playlist-track">
-                    {% if (playlist['playlist'].title == "Winner Wednesday") %}
-                    <div class="vote-box">
-                        <div style="display:flex; flex-direction: row;">
-                            <div>
-                                <h4 style="padding:0; margin-bottom:10px;">{{track.track_title}}</h4>
-                                <p style="padding:0; margin:0;"><a class="playlist-track-link" href="https://music.apple.com/us/song/1532019310">Apple Music</a></p>
-                                <p style="padding:0; margin:0;"><a class="playlist-track-link" href="https://open.spotify.com/track/5x2kt6LCe6a2ePj3sb7IV2?si=0f87f23af3f64dee">Spotify</a></p>
-                            </div>
-                            <div style="display:flex; flex-direction: column; width: 20%; margin-left:auto ">
-                                <button>Up Vote</button>
-                                <button>Down Vote</button>
-                            </div>
+                <div class="card my-1 has-background-warning-light">
+                    <div class="card-header is-pulled-right">
+                        <a class="button is-small" href="https://music.apple.com/us/song/1532019310">A</a>
+                        <a class="button is-small" href="https://open.spotify.com/track/5x2kt6LCe6a2ePj3sb7IV2?si=0f87f23af3f64dee">S</a>
+                    </div>
+                {% if (playlist['playlist'].title != "Winner Wednesday") %}
+                    <div class="card-content">
+                        <div class="content has-text-centered">
+                            <h6 class="title has-text-centered is-6 mt-4">{{track.track_title}}</h6>
                         </div>
                     </div>
-                    {% else %}
-                        <h4 style="padding:0; margin-bottom:10px;">{{track.track_title}}</h4>
-                        <p style="padding:0; margin:0;"><a class="playlist-track-link" href="https://music.apple.com/us/song/1532019310">Apple Music</a></p>
-                        <p style="padding:0; margin:0;"><a class="playlist-track-link" href="https://open.spotify.com/track/5x2kt6LCe6a2ePj3sb7IV2?si=0f87f23af3f64dee">Spotify</a></p>
-                    {% endif %}
+                {% else %}
+                    <div class="card-content">
+                        <div class="content has-text-centered">
+                        <h6 class="title has-text-centered is-6 mt-4">{{track.track_title}}</h6>
+                        <h6 class="title is-6">vs</h6>
+                        <h6 class="title has-text-centered is-6 mt-1">{{track.track_title}}</h6>
+                        </div>
+                      </div>
+                  
+                {% endif %}
                 </div>
             {% endfor %}
         </div>
     {% endfor %}
+
+    <div id="add-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Add Song</p>
+            <button class="delete" onclick="closeModal()" aria-label="close"></button>
+          </header>
+          <section class="modal-card-body">
+            <form action="/add-song" method="post">
+            <div class="field">
+                <label class="label">Song</label>
+                <div class="control">
+                  <input class="input" type="text" name="song" placeholder="Enter a song...">
+                </div>
+              </div>
+              <input id="playlist-id-input" name='playlist-id' type='hidden'>
+          </section>
+          <footer class="modal-card-foot">
+            <button type="submit" class="button is-success">Save changes</button>
+            <button onclick="closeModal()" class="button">Cancel</button>
+          </footer>
+        </form>
+        </div>
+      </div>
 </div>
 
-
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 
 </body>
 </html>
