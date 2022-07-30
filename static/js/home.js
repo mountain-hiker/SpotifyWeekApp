@@ -9,6 +9,9 @@
     const modal = document.getElementById('add-modal')
     modal.classList.add('is-active')
 
+    const songInput = document.getElementById('song-input')
+    songInput.focus()
+
     const playlistIdInput = document.getElementById('playlist-id-input')
     playlistIdInput.value = id
  }
